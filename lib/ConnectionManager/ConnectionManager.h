@@ -21,8 +21,9 @@ public:
   ConnectionManager();
   void resetConfiguration();
   void init();
-
   void saveConfigCallback();
+  void readConfiguration();
+  void writeConfiguration();
 
 private:
   WiFiManager wifiManager;
@@ -30,7 +31,6 @@ private:
   const char *configFile         = "/config.json";
   const char *apSSIDPrefix       = "MRT-PowerMeter";
   
-  void readConfiguration();
 };
 
 #endif

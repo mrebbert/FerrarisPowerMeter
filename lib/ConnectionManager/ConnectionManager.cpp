@@ -87,77 +87,79 @@ void ConnectionManager::init() {
     config.rotations_per_kwh = atoi(custom_rotations_per_kwh.getValue());
     config.actual_counter    = atof(custom_actual_counter.getValue());
     
-    JSONVar json;
-    json["mqtt_server"] = custom_mqtt_server.getValue();
-    json["mqtt_port"] = custom_mqtt_port.getValue();
-    json["mqtt_user"] = custom_mqtt_user.getValue();
-    json["mqtt_password"] = custom_mqtt_password.getValue();
-    json["rotations_per_kwh"] = custom_rotations_per_kwh.getValue();
-    json["actual_counter"] = custom_actual_counter.getValue();
-
-    if (LittleFS.begin()) {
-      if(DEBUG)
-        USE_SERIAL.println(json);
-      File fileHandle = LittleFS.open(configFile, "w");
-      if (!fileHandle) {
-        if(DEBUG)
-          USE_SERIAL.println("failed to open config file for writing");
-      }
-      if(DEBUG)
-        json.printTo(Serial);
-
-      json.printTo(fileHandle);
-      fileHandle.close();
-      LittleFS.end();
-    } else {
-      if(DEBUG)
-        USE_SERIAL.println("failed to mount FS");
-    }
+    writeConfiguration();
   }
 }
 
-/*
-  Reads the additional mqtt configuration from the json file to attributes.
-*/
 void ConnectionManager::readConfiguration() {
   if (LittleFS.begin()) {
-    if(DEBUG)
-        USE_SERIAL.println("file system mounted.");
+  if(DEBUG)
+    USE_SERIAL.println("file system mounted.");
 
-    if (LittleFS.exists(configFile)) {
-      //file exists, reading and loading
+  if (LittleFS.exists(configFile)) {
+    //file exists, reading and loading
+    if(DEBUG)
+      USE_SERIAL.println("reading config file");
+    File fileHandle = LittleFS.open(configFile, "r");
+
+    if (fileHandle) {
       if(DEBUG)
-        USE_SERIAL.println("reading config file");
-      File fileHandle = LittleFS.open(configFile, "r");
+        USE_SERIAL.println("opened config file");
+      size_t size = fileHandle.size();
+      // Allocate a buffer to store contents of the file.
+      std::unique_ptr<char[]> buf(new char[size]);
 
-      if (fileHandle) {
-        if(DEBUG)
-          USE_SERIAL.println("opened config file");
-        size_t size = fileHandle.size();
-        // Allocate a buffer to store contents of the file.
-        std::unique_ptr<char[]> buf(new char[size]);
+      fileHandle.readBytes(buf.get(), size);
+      JSONVar jsonBuffer = JSON.parse(buf.get());
 
-        fileHandle.readBytes(buf.get(), size);
-        JSONVar jsonBuffer = JSON.parse(buf.get());
+      if(DEBUG)
+        USE_SERIAL.println(jsonBuffer);
 
-        if(DEBUG)
-          USE_SERIAL.println(jsonBuffer);
-
-        strcpy(config.mqtt_server, jsonBuffer["mqtt_server"]);
-        config.mqtt_port         = atoi(jsonBuffer["mqtt_port"]);
-        strcpy(config.mqtt_user, jsonBuffer["mqtt_user"]);
-        strcpy(config.mqtt_password, jsonBuffer["mqtt_password"]);
-        config.rotations_per_kwh = atoi(jsonBuffer["rotations_per_kwh"]);
-        config.actual_counter    = atof(jsonBuffer["actual_counter"]);
-      }
-      fileHandle.close();
+      strcpy(config.mqtt_server, jsonBuffer["mqtt_server"]);
+      config.mqtt_port         = (int) jsonBuffer["mqtt_port"];
+      strcpy(config.mqtt_user, jsonBuffer["mqtt_user"]);
+      strcpy(config.mqtt_password, jsonBuffer["mqtt_password"]);
+      config.rotations_per_kwh = (int) jsonBuffer["rotations_per_kwh"];
+      config.actual_counter    = (double) jsonBuffer["actual_counter"];
     }
-    LittleFS.end();
-  } else {
-    if(DEBUG)
-        USE_SERIAL.println("failed to mount FS");
+    fileHandle.close();
   }
-  //end read
+  LittleFS.end();
+  } else {
+   if(DEBUG)
+       USE_SERIAL.println("failed to mount FS");
+  }
+}
+
+void ConnectionManager::writeConfiguration() {
+  JSONVar json;
+   json["mqtt_server"] = config.mqtt_server;
+   json["mqtt_port"] = config.mqtt_port;
+   json["mqtt_user"] = config.mqtt_user;
+   json["mqtt_password"] = config.mqtt_password;
+   json["rotations_per_kwh"] = config.rotations_per_kwh;
+   json["actual_counter"] = config.actual_counter;
+
+   if (LittleFS.begin()) {
+     if(DEBUG)
+       USE_SERIAL.println(json);
+     File fileHandle = LittleFS.open(configFile, "w");
+     if (!fileHandle) {
+       if(DEBUG)
+         USE_SERIAL.println("failed to open config file for writing");
+     }
+     if(DEBUG) {
+       USE_SERIAL.println("Writing JSON String:");
+       json.printTo(USE_SERIAL);
+       USE_SERIAL.println();
+     }
+     json.printTo(fileHandle);
+     fileHandle.close();
+     LittleFS.end();
+   } else {
+     if(DEBUG)
+       USE_SERIAL.println("failed to mount FS");
+   }
 }
 
 void ConnectionManager::resetConfiguration() {

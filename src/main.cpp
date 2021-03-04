@@ -4,7 +4,6 @@
 #include <MessageBuilder.h>
 
 #define DIGITALPIN D5
-#define RESET_PIN 1
 #define DEBUG true
 #define USE_SERIAL Serial
 
@@ -37,25 +36,21 @@ void setup () {
 
   USE_SERIAL.begin (9600);
   
-  //connectionManager.resetConfiguration();
+  // Activate to reset all wifimanager settings
+  // connectionManager.resetConfiguration();
+
   connectionManager.init();
 
   //initialize the power meter with the actual value
   // actual_counter = connectionManager.config.actual_counter;
 
   if(DEBUG) {
-    USE_SERIAL.print("MQTT Server: ");
-    USE_SERIAL.println(connectionManager.config.mqtt_server);
-    USE_SERIAL.print("MQTT Port: ");
-    USE_SERIAL.println(connectionManager.config.mqtt_port);
-    USE_SERIAL.print("MQTT User: ");
-    USE_SERIAL.println(connectionManager.config.mqtt_user);
-    //USE_SERIAL.print("MQTT Password: ");
-    //USE_SERIAL.println(connectionManager.config.mqtt_password);
-    USE_SERIAL.print("Rotations per kWh: ");
-    USE_SERIAL.println(connectionManager.config.rotations_per_kwh);
-    USE_SERIAL.print("Actual Counter: ");
-    USE_SERIAL.println(connectionManager.config.actual_counter);
+    USE_SERIAL.print("MQTT Server:    "); USE_SERIAL.println(connectionManager.config.mqtt_server);
+    USE_SERIAL.print("MQTT Port:      "); USE_SERIAL.println(connectionManager.config.mqtt_port);
+    USE_SERIAL.print("MQTT User:      "); USE_SERIAL.println(connectionManager.config.mqtt_user);
+    // USE_SERIAL.print("MQTT Password:  "); USE_SERIAL.println(connectionManager.config.mqtt_password);
+    USE_SERIAL.print("Actual Counter: "); USE_SERIAL.println(connectionManager.config.actual_counter);
+    USE_SERIAL.print("Rotations:      "); USE_SERIAL.println(connectionManager.config.rotations_per_kwh);
   }
 
   msgBuilder.getConfigTopicName(hostname, "energy", energyTopicName, maxTopicNameSize);
@@ -66,14 +61,11 @@ void setup () {
 
 /*
   if(DEBUG) {
-    USE_SERIAL.print("Energy Topic: ");
-    USE_SERIAL.println(energyTopicName);
+    USE_SERIAL.print("Energy Topic: "); USE_SERIAL.println(energyTopicName);
     USE_SERIAL.println(energyConfigPayload);
-    USE_SERIAL.print("Power Topic: ");
-    USE_SERIAL.println(powerTopicName);
+    USE_SERIAL.print("Power Topic: "); USE_SERIAL.println(powerTopicName);
     USE_SERIAL.println(powerConfigPayload);
-    USE_SERIAL.print("State Topic: ");
-    USE_SERIAL.println(stateTopicName);
+    USE_SERIAL.print("State Topic: "); USE_SERIAL.println(stateTopicName);
   }
 */
 
@@ -124,13 +116,20 @@ float getEnergyInKwhPerImpulse() {
 }
 
 void loop () {
-
+  // store actual milliseconds since start 
   uint32_t _currentMillis = millis();
-  boolean _isThresholdReached = digitalRead(DIGITALPIN);
 
-  if (_isThresholdReached) {
+ /*
+  * stores HIGH or LOW signal of the IR Sensor.
+  * Logic is:
+  * As long as the silver color of the rotary disc is detected, the signal is HIGH,
+  * if red (or a darker) color is detected, the signal turns to LOW.
+  */
+  boolean hasImpulse = !digitalRead(DIGITALPIN);
+
+  if (hasImpulse) {
     if(DEBUG) 
-      USE_SERIAL.println("Threshold reached.");
+      USE_SERIAL.println("Impulse detected.");
 
     if (!previousImpulse && timeIsTicking) {
       /*
@@ -147,9 +146,12 @@ void loop () {
         float _powerInWatts                      = getPowerInWatts(_seconds);
         connectionManager.config.actual_counter += getEnergyInKwhPerImpulse();
         publish(_powerInWatts, connectionManager.config.actual_counter);
-        
+
+        //persist the power meter counter
+        connectionManager.writeConfiguration();
+
         if(DEBUG) {
-          USE_SERIAL.printf("The actual power consumption is %0.5f watts.", _powerInWatts);
+          USE_SERIAL.printf("The actual power consumption is %.2f watts.", _powerInWatts);
           USE_SERIAL.println();
         }
       }
@@ -163,8 +165,8 @@ void loop () {
     // save timestamp
     previousImpulseMillis = _currentMillis;
 
-  } //end if (_isThresholdReached)
+  } //end if (hasImpulse)
 
-  previousImpulse = _isThresholdReached;
-  delay(500);
+  previousImpulse = hasImpulse;
+  delay(200);
 }
