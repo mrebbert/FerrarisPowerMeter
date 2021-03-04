@@ -4,7 +4,7 @@
 #include <MessageBuilder.h>
 
 #define DIGITALPIN D5
-#define DEBUG true
+#define DEBUG false
 #define USE_SERIAL Serial
 
 ConnectionManager connectionManager;
@@ -14,8 +14,6 @@ MessageBuilder    msgBuilder;
 uint32_t previousImpulseMillis = 0;
 boolean  previousImpulse       = false;
 boolean  timeIsTicking         = false;
-
-//float    actual_counter        = (float) 0.0;
 
 uint16_t maxPayloadBufferSize  = MqttClient::getMaxPayloadBufferSize();
 uint8_t  maxTopicNameSize      = MqttClient::getMaxTopicNameSize();
@@ -40,9 +38,6 @@ void setup () {
   // connectionManager.resetConfiguration();
 
   connectionManager.init();
-
-  //initialize the power meter with the actual value
-  // actual_counter = connectionManager.config.actual_counter;
 
   if(DEBUG) {
     USE_SERIAL.print("MQTT Server:    "); USE_SERIAL.println(connectionManager.config.mqtt_server);
@@ -122,7 +117,7 @@ void loop () {
  /*
   * stores HIGH or LOW signal of the IR Sensor.
   * Logic is:
-  * As long as the silver color of the rotary disc is detected, the signal is HIGH,
+  * As long as the silver color of the rotary disc is recognized, the signal is HIGH,
   * if red (or a darker) color is detected, the signal turns to LOW.
   */
   boolean hasImpulse = !digitalRead(DIGITALPIN);
