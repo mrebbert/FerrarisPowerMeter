@@ -142,9 +142,6 @@ void loop () {
         connectionManager.config.actual_counter += getEnergyInKwhPerImpulse();
         publish(_powerInWatts, connectionManager.config.actual_counter);
 
-        //persist the power meter counter
-        connectionManager.writeConfiguration();
-
         if(DEBUG) {
           USE_SERIAL.printf("The actual power consumption is %.2f watts.", _powerInWatts);
           USE_SERIAL.println();
