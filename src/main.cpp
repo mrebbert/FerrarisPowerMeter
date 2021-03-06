@@ -2,6 +2,17 @@
 #include <ConnectionManager.h> 
 #include <MqttClient.h>
 #include <MessageBuilder.h>
+#include <DoubleResetDetect.h>
+
+// maximum number of seconds between resets that
+// counts as a double reset 
+#define DRD_TIMEOUT 2.0
+
+// address to the block in the RTC user memory
+// change it if it collides with another usage 
+// of the address block
+#define DRD_ADDRESS 0x00
+DoubleResetDetect drd(DRD_TIMEOUT, DRD_ADDRESS);
 
 #define DIGITALPIN D5
 #define DEBUG false
@@ -36,7 +47,10 @@ void setup () {
   
   // Activate to reset all wifimanager settings
   // connectionManager.resetConfiguration();
-
+  if (drd.detect() && ESP.getResetInfoPtr()->reason == 6) {
+    Serial.println("** Double reset boot **");
+    connectionManager.resetConfiguration();
+  }
   connectionManager.init();
 
   if(DEBUG) {
