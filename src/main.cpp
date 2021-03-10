@@ -163,7 +163,7 @@ void loop () {
 
     if (!previousImpulse && timeIsTicking) {
       /*
-        The previous threshold is false so we only get the first positive impulse in a sequence.
+        The previous impulse is false so we only get the first positive impulse in a sequence.
         With timeIsTicking we ensure that we get the first full round.
       */
 
