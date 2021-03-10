@@ -10,6 +10,8 @@ class DisplayManager {
   public:
     DisplayManager();
     void updateDisplay(float power, float total_energy, float today_energy);
+    void updateDisplay(float power, float total_energy, float today_energy, const char* date, const char* time);
+    void updateDisplay(float power, float total_energy, float today_energy, const char* date, const char* time, float temperature);
   private:
 };
 

@@ -41,3 +41,46 @@ void DisplayManager::updateDisplay(float power, float total_energy, float today_
 
   display.display(); 
 }
+
+void DisplayManager::updateDisplay(float power, float total_energy, float today_energy, const char* date, const char* time) {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.printf("%s  %s", date, time);
+  display.drawLine(0,12,128,12,WHITE);
+
+  display.setCursor(0, 17);
+  display.println("Aktuelle Leistung:");
+  display.setCursor(40, 28);
+  display.printf("%.2f (W)", power);
+  display.drawLine(0,39,128,39,WHITE);
+
+  display.setCursor(0, 43);
+  display.println("Verbr. Heute/Gesamt:");
+  display.setCursor(0, 54);
+  display.printf("%.1f / %.1f (kWh)", today_energy, total_energy);
+
+  display.display(); 
+}
+
+void DisplayManager::updateDisplay(float power, float total_energy, float today_energy, const char* date, const char* time, float temperature) {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.printf("%s   %.1f%sC", date, temperature, "\xF8");
+  display.setCursor(0, 11);
+  display.println(time);
+  display.drawLine(0,21,128,21,WHITE);
+
+  display.setCursor(0, 23);
+  display.println("Aktuelle Leistung:");
+  display.setCursor(40, 34);
+  display.printf("%.2f (W)", power);
+  display.drawLine(0,43,128,43,WHITE);
+
+  display.setCursor(0, 45);
+  display.println("Verbr. Heute/Gesamt:");
+  display.setCursor(0, 56);
+  display.printf("%.2f / %.1f (kWh)", today_energy, total_energy);
+
+  display.display(); 
+}
+
