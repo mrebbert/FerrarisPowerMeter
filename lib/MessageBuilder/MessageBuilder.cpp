@@ -27,12 +27,14 @@ void MessageBuilder::buildConfigrationPayload(const char* node,
   strcpy(payload, JSONVar::stringify(jpayload).c_str());
 }
 
-void MessageBuilder::getStatePayload(const char* node, float watts, float kwh, char* buf, uint8_t buf_size) {
+void MessageBuilder::getStatePayload(const char* node, float powerInWatts, 
+      float total_energy_in_kwh, float today_energy_in_kwh, char* buf, uint8_t buf_size) {
   
   JSONVar statePayload;
   statePayload["node"] = node;
-  statePayload["energy"] = kwh;
-  statePayload["power"] = watts;
+  statePayload["total_energy_kwh"] = total_energy_in_kwh;
+  statePayload["today_energy_kwh"] = today_energy_in_kwh;
+  statePayload["power"] = powerInWatts;
   
   strcpy(buf, JSONVar::stringify(statePayload).c_str());
 } 
@@ -65,5 +67,5 @@ void MessageBuilder::getEnergyConfigurationPayload(const char* node, char* paylo
   strcpy(name, node);
   strcat(name, "-Energy");
 
-  buildConfigrationPayload(node, "energy", name, "kWh", "{{value_json.energy}}", payload, buff_size, tNSize);
+  buildConfigrationPayload(node, "energy", name, "kWh", "{{value_json.total_energy_kwh}}", payload, buff_size, tNSize);
 }

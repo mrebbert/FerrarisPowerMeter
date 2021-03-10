@@ -11,7 +11,7 @@ class MessageBuilder {
     void getStateTopicName(const char* node, char* tName, uint8_t buff_size);
     void getPowerConfigurationPayload(const char* node, char* payload, uint16_t buff_size, uint8_t tNSize);
     void getEnergyConfigurationPayload(const char* node, char* payload, uint16_t buff_size, uint8_t tNSize);
-    void getStatePayload(const char* node, float watts, float kwh, char* buf, uint8_t buff_size);
+    void getStatePayload(const char* node, float powerInWatts, float total_energy_in_kwh, float today_energy_in_kwh, char* buf, uint8_t buff_size);
 
   private:
     void buildConfigrationPayload(const char* node, 

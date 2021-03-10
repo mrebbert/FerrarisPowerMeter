@@ -96,7 +96,7 @@ void setup () {
   delay(3000); // give some time to initialize...
 }
 
-void publish(float watts, float kwh) {
+void publish() {
 
   if(!mqttClient.isConnected()) {
     if(!mqttClient.reconnect()) {
@@ -107,14 +107,14 @@ void publish(float watts, float kwh) {
 
   if(mqttClient.isConnected()) {
     char statePayload[maxPayloadBufferSize];
-    msgBuilder.getStatePayload(hostname, watts, kwh, statePayload, maxPayloadBufferSize);
+    msgBuilder.getStatePayload(hostname, powerInWatts, total_energy_kwh, today_energy_kwh, statePayload, maxPayloadBufferSize);
 
     mqttClient.publish(energyTopicName, energyConfigPayload, true);
     mqttClient.publish(powerTopicName, powerConfigPayload, true);
     mqttClient.publish(stateTopicName, statePayload, false);
 
     if(DEBUG) {
-      USE_SERIAL.printf("Published %.5f watts and %.5f kWh.", watts, kwh);
+      USE_SERIAL.printf("Published %.5f watts and %.5f kWh.", powerInWatts, total_energy_kwh);
       USE_SERIAL.println();   
     }
   }
@@ -176,7 +176,7 @@ void loop () {
           today_energy_kwh = 0.0;
         today_energy_kwh += _energyInkWh;  
 
-        publish(powerInWatts, total_energy_kwh);
+        publish();
 
         if(DEBUG) {
           USE_SERIAL.printf("%s - %s.", date, time);
@@ -205,5 +205,4 @@ void loop () {
   displayManager.updateDisplay(powerInWatts, total_energy_kwh, today_energy_kwh, date, time);
 
   previousImpulse = _hasImpulse;
-  // delay(200);
 }
