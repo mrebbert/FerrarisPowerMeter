@@ -81,7 +81,9 @@ Important: For a better fit i scale this one 101% in the x- and y-achses and add
 Once, everything is wired, the MCU could be configured. Initially it raises an access point which you can find with a wifi scan. The SSID starts with "MRT-Power-Meter...". Once connected, you can configure your settings.
 * Wifi SSID and Credentials
 * MQTT settings
-* Power Meter Data: normally, the information, how many rotations means 1 kWh, you find on the power meter (i.e. 75 U/1kWh or similar). You also can enter the actual count of your power meter.
+* Rotations per kWh: You can find the information, how many rotations of the disc means 1kWh, directly on the counter (i.e. 75 U/1kWh or similar). 
+* Actual counter: You also can enter the actual count of your counter.
+
 ![configscreen](images/configuration.png)
 
 
