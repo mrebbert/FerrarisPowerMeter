@@ -19,7 +19,7 @@ To make the (or even my) life easier, it uses different fantastic libraries:
 
 The usage of these libs is (more or less) encapsulated in corresponding own libraries, which are described (/TODO) [here](lib/README.md).
 
-Most of it is running out-of-the-box. You may want to change your ntp server settings [here](https://github.com/mrebbert/FerrarisPowerMeter/blob/0330429b64ce363cd771c794b9032cdda1af8b55/lib/NTPTime/NTPTime.h#L9)
+Most of it is running out-of-the-box. You may want to change your ntp server settings [here](https://github.com/mrebbert/FerrarisPowerMeter/blob/c33aa84eea5acad4d4f4d60f85a32ed460087d44/lib/NTPTime/NTPTime.h#L8).
 
 ### MQTT Broker
 I use the [Mosquitto](https://mosquitto.org/) Broker which fits my requirements perfectly. You can also find an official [Docker Image](https://hub.docker.com/_/eclipse-mosquitto) of it.
