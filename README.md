@@ -25,52 +25,13 @@ Most of it is running out-of-the-box. You may want to change your ntp server set
 I use the [Mosquitto](https://mosquitto.org/) Broker which fits my requirements perfectly. You can also find an official [Docker Image](https://hub.docker.com/_/eclipse-mosquitto) of it.
 I recommend a GUI based client like MQTT Explorer or MQTT.fx for testing purposes.
 
-My docker-compose.yaml snippet is:
-```
-  mqtt:
-    image: eclipse-mosquitto:latest
-    container_name: mqtt
-    volumes:
-      - "../mosquitto/config:/mosquitto/config/:ro"
-      - "../mosquitto/data:/mosquitto/data"
-    ports:
-      - "1883:1883"
-      - "9001:9001"
-    restart: "always"
-```
-My mosquitto.conf:
-```
-# Place your local configuration in /mqtt/config/conf.d/
-
-pid_file /mosquitto/mosquitto.pid
-
-persistence true
-persistence_location /mosquitto/data/
-
-user mosquitto
-
-# Port to use for the default listener.
-listener 1883
-listener 9001
-protocol websockets
-
-allow_anonymous false
-password_file /mosquitto/config/passwd
-
-# log_dest file /mosquitto/log/mosquitto.log
-log_dest stdout
-
-include_dir /mosquitto/config/conf.d
-```
-
 Once the sensor is running, you'll find three new topics on your broker:
 ```
-|-<host>
-  |-homeassistant
-    |-MRT-Power-Meter-1234 (<-- the last digits are the chip id and can vary)
-      |-energy: the configuration topic of the energy sensor(kWh)
-      |-power: the configuration topic of the power sensor(W)
-      |-state: the sensor payload
+|-homeassistant
+  |-MRT-Power-Meter-1234 (<-- the last digits are the chip id and can vary)
+    |-energy: the configuration topic of the energy sensor(kWh)
+    |-power: the configuration topic of the power sensor(W)
+    |-state: the sensor payload
 ```
 ### Home Assistant
 The integration of the sensor data in Home Assistant is pretty straight forward. Once, the [MQTT Integration](https://www.home-assistant.io/integrations/mqtt/) is done, the sensors for Power (watts) and Energy (kWh) will be integrated automically with the first published configuration messages. I made use of the [MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/) mechanism for that.
