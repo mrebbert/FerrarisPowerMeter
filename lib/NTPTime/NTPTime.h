@@ -5,8 +5,8 @@
 #include <time.h> // time() ctime()
 
 /* Configuration of NTP */
-//#define MY_NTP_SERVER "de.pool.ntp.org"
-#define MY_NTP_SERVER "fritz.box"
+#define MY_NTP_SERVER "de.pool.ntp.org"
+
 #define MY_TZ "CET-1CEST,M3.5.0,M10.5.0/3" //https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
 
 class NTPTime {

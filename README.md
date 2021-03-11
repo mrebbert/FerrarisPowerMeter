@@ -19,6 +19,8 @@ To make the (or even my) life easier, it uses different fantastic libraries:
 
 The usage of these libs is (more or less) encapsulated in corresponding own libraries, which are described (/TODO) [here](lib/README.md).
 
+Most of it is running out-of-the-box. You may want to change your ntp server settings [here](https://github.com/mrebbert/FerrarisPowerMeter/blob/0330429b64ce363cd771c794b9032cdda1af8b55/lib/NTPTime/NTPTime.h#L9)
+
 ### MQTT Broker
 I use the [Mosquitto](https://mosquitto.org/) Broker which fits my requirements perfectly. You can also find an official [Docker Image](https://hub.docker.com/_/eclipse-mosquitto) of it.
 I recommend a GUI based client like MQTT Explorer or MQTT.fx for testing purposes.
@@ -70,8 +72,13 @@ The wiring is quite simple: The input of one of the 6 Schmitt triggers is provid
 I took some out-of-the-box cases from thingiverse here.
 https://www.thingiverse.com/thing:4560681
 
-For the Wemos including the board and display: 
+For the Wemos D1 mini including the board and display: 
 https://www.thingiverse.com/thing:4371400
 Important: For a better fit i scale it 101% in the x- and y-achses and the case (not the top) 150% in the Z-achses to have more space.
 
 (/TODO: add some real life photos here.)
+
+## The Configuration
+Once, everything is wired, the MCU could be configured. Initially it raises an access point which you can find with a wifi scan. The SSID starts with "MRT-Power-Meter...". Once connected, you can configure your settings:
+[configuration-screen](images/configuration.png)
+
