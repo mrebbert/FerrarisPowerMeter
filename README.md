@@ -70,11 +70,10 @@ The wiring is quite simple: The input of one of the 6 Schmitt triggers is provid
 
 ## The Cases
 I took some out-of-the-box cases from thingiverse here.
-https://www.thingiverse.com/thing:4560681
+For the TCRT5000: https://www.thingiverse.com/thing:4560681
 
-For the Wemos D1 mini including the board and display: 
-https://www.thingiverse.com/thing:4371400
-Important: For a better fit i scale it 101% in the x- and y-achses and the case (not the top) 150% in the Z-achses to have more space.
+For the Wemos D1 mini including the board and display: https://www.thingiverse.com/thing:4371400
+Important: For a better fit i scale this one 101% in the x- and y-achses and additionally the case (not the top) 150% in the Z-achses to have more space inside.
 
 (/TODO: add some real life photos here.)
 
@@ -86,5 +85,5 @@ Once, everything is wired, the MCU could be configured. Initially it raises an a
 ![configscreen](images/configuration.png)
 
 
-If the input was correct the esp restarts and connects to local wifi. If the credentials of the wifi were wrong the AP starts again and you're able to re-enter your data. 
+If the input was correct the esp restarts and connects to the configured wifi. If the credentials of the wifi were wrong the AP starts again and you're able to re-enter your data. 
 If you want delete your configuration you can push the reset button twice.
