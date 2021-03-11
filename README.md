@@ -25,9 +25,46 @@ Most of it is running out-of-the-box. You may want to change your ntp server set
 I use the [Mosquitto](https://mosquitto.org/) Broker which fits my requirements perfectly. You can also find an official [Docker Image](https://hub.docker.com/_/eclipse-mosquitto) of it.
 I recommend a GUI based client like MQTT Explorer or MQTT.fx for testing purposes.
 
-Once running, you'll find three new topics on your broker:
+My docker-compose.yaml snippet is:
+```
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: mqtt
+    volumes:
+      - "../mosquitto/config:/mosquitto/config/:ro"
+      - "../mosquitto/data:/mosquitto/data"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    restart: "always"
+```
+My mosquitto.conf:
+```
+# Place your local configuration in /mqtt/config/conf.d/
+
+pid_file /mosquitto/mosquitto.pid
+
+persistence true
+persistence_location /mosquitto/data/
+
+user mosquitto
+
+# Port to use for the default listener.
+listener 1883
+listener 9001
+protocol websockets
+
+allow_anonymous false
+password_file /mosquitto/config/passwd
+
+# log_dest file /mosquitto/log/mosquitto.log
+log_dest stdout
+
+include_dir /mosquitto/config/conf.d
 ```
 
+Once the sensor is running, you'll find three new topics on your broker:
+```
 |-<host>
   |-homeassistant
     |-MRT-Power-Meter-1234 (<-- the last digits are the chip id and can vary)
@@ -41,6 +78,24 @@ If everything's fine, you'll find two new sensors in your entity list:
 ```
 sensor.mrt_power_meter_1234_energy
 sensor.mrt_power_meter_1234_power
+```
+![Sensors in HA](images/ha_sensors.png)
+
+To track the consumption in long term i personally use the [Utility Meter](https://www.home-assistant.io/integrations/utility_meter/) in Home Assistant:
+```
+
+daily_energy_house:
+  source: sensor.mrt_power_meter_1234_energy
+  cycle: daily
+weekly_energy_house:
+  source: sensor.mrt_power_meter_1234_energy
+  cycle: weekly
+monthly_energy_house:
+  source: sensor.mrt_power_meter_1234_energy
+  cycle: monthly
+yearly_energy_house:
+  source: sensor.mrt_power_meter_1234_energy
+  cycle: yearly
 ```
 ## The Hardware
 As mentioned before, i use the Wemos D1 mini for the development. But i'm sure, you can use every ESP based MCU.
@@ -71,9 +126,11 @@ The wiring is quite simple: The input of one of the 6 Schmitt triggers is provid
 
 ## The Cases
 I took some out-of-the-box cases from thingiverse here.
+
 For the TCRT5000: https://www.thingiverse.com/thing:4560681
 
 For the Wemos D1 mini including the board and display: https://www.thingiverse.com/thing:4371400
+
 Important: For a better fit i scale this one 101% in the x- and y-achses and additionally the case (not the top) 150% in the Z-achses to have more space inside.
 
 (/TODO: add some real life photos here.)
