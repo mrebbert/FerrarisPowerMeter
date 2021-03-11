@@ -65,6 +65,7 @@ A very convinient solution for this is to use a so called 'Schmitt Trigger'. Jus
 The wiring is quite simple: The input of one of the 6 Schmitt triggers is provided with a 100 nF capacitor against ground and is connected to the D0 output of the TCRT5000 (I took the first pair: Pin 1 and 2). The output of the Schmitt trigger goes to the desired pin of the ESP8266 (D5 in my case). Pin 7 of the IC goes to GND and pin 14 to the 3.3 volts of the ESP8266. The display uses the I2C bus.
 
 ![Fritzing](images/Ferrarissensor_Steckplatine.png)
+![Schaltplan](images/Ferrariscounter_Schaltplan.png)
 
 (/TODO: add some better graphics here.)
 
