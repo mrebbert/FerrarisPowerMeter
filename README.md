@@ -50,7 +50,7 @@ Shopping list: (de-amazon affiliate links)
 * [0,96" OLED Display I2C 128 x 64](https://amzn.to/2PUW1sj)
 * [IC 74HC14N](https://amzn.to/3vcr033)
 * Capacitor 100 nF
-* Cable
+* Wire
 
 ## The Wiring, Soldering and/or Fritzing
 
