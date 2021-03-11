@@ -79,6 +79,12 @@ Important: For a better fit i scale it 101% in the x- and y-achses and the case 
 (/TODO: add some real life photos here.)
 
 ## The Configuration
-Once, everything is wired, the MCU could be configured. Initially it raises an access point which you can find with a wifi scan. The SSID starts with "MRT-Power-Meter...". Once connected, you can configure your settings:
-[configuration-screen](images/configuration.png)
+Once, everything is wired, the MCU could be configured. Initially it raises an access point which you can find with a wifi scan. The SSID starts with "MRT-Power-Meter...". Once connected, you can configure your settings.
+* Wifi SSID and Credentials
+* MQTT settings
+* Power Meter Data: normally, the information, how many rotations means 1 kWh, you find on the power meter (i.e. 75 U/1kWh or similar). You also can enter the actual count of your power meter.
+![configscreen](images/configuration.png)
 
+
+If the input was correct the esp restarts and connects to local wifi. If the credentials of the wifi were wrong the AP starts again and you're able to re-enter your data. 
+If you want delete your configuration you can push the reset button twice.
