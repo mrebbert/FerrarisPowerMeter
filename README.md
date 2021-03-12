@@ -94,7 +94,7 @@ For the Wemos D1 mini including the board and display: https://www.thingiverse.c
 
 Important: For a better fit i scale this one 101% in the x- and y-achses and additionally the case (not the top) 150% in the Z-achses to have more space inside.
 
-(/TODO: add some real life photos here.)
+![](images/complete.png)![](images/irsensor.png)![](images/head_unit.jpeg)
 
 ## The Configuration
 Once, everything is wired, the MCU could be configured. Initially it raises an access point which you can find with a wifi scan. The SSID starts with "MRT-Power-Meter...". Once connected, you can configure your settings.
