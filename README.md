@@ -58,6 +58,7 @@ yearly_energy_house:
   source: sensor.mrt_power_meter_1234_energy
   cycle: yearly
 ```
+![](images/ha_ovierview.png)
 ## The Hardware
 As mentioned before, i use the Wemos D1 mini for the development. But i'm sure, you can use every ESP based MCU.
 Shopping list: (de-amazon affiliate links)
