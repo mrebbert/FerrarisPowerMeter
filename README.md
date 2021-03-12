@@ -83,8 +83,6 @@ The wiring is quite simple: The input of one of the 6 Schmitt triggers is provid
 ![Fritzing](images/Ferrarissensor_Steckplatine.png)
 ![Schaltplan](images/Ferrariscounter_Schaltplan.png)
 
-(/TODO: add some better graphics here.)
-
 ## The Cases
 I took some out-of-the-box cases from thingiverse here.
 
