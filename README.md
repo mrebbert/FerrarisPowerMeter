@@ -21,7 +21,7 @@ The usage of these libs is (more or less) encapsulated in corresponding own libr
 
 Most of it is running out-of-the-box. You may want to change your ntp server settings [here](https://github.com/mrebbert/FerrarisPowerMeter/blob/c33aa84eea5acad4d4f4d60f85a32ed460087d44/lib/NTPTime/NTPTime.h#L8).
 
-### MQTT Broker
+### MQTT
 I use the [Mosquitto](https://mosquitto.org/) Broker which fits my requirements perfectly. You can also find an official [Docker Image](https://hub.docker.com/_/eclipse-mosquitto) of it.
 I recommend a GUI based client like MQTT Explorer or MQTT.fx for testing purposes.
 
@@ -33,6 +33,36 @@ Once the sensor is running, you'll find three new topics on your broker:
     |-power: the configuration topic of the power sensor(W)
     |-state: the sensor payload
 ```
+'energy' and 'power' contains the configuration payload for the sensors. This is neccessary so that the MQTT Discovery of Home Assistant integrate the sensors automatically. The payload is more or less static and the configuration is 'retain'.
+```json
+{"device_class":"energy",
+ "name":"MRT-Power-Meter-1234-Energy",
+ "state_topic":"homeassistant/sensor/MRT-Power-Meter-1234/state",
+ "json_attributes_topic":"homeassistant/sensor/MRT-Power-Meter-1234/state",
+ "unique_id":"MRT-Power-Meter-1234-Energy-ESP",
+ "unit_of_measurement":"kWh",
+ "value_template":"{{value_json.total_energy_kwh}}"
+}
+```
+```json
+{"device_class":"power",
+ "name":"MRT-Power-Meter-1234-Power",
+ "state_topic":"homeassistant/sensor/MRT-Power-Meter-1234/state",
+ "json_attributes_topic":"homeassistant/sensor/MRT-Power-Meter-1234/state",
+ "unique_id":"MRT-Power-Meter-1234-Power-ESP",
+ "unit_of_measurement":"W",
+ "value_template":"{{value_json.power}}"
+}
+```
+The 'state' topics contains the current attributes of power and energy consumption.
+```json
+{"node":"MRT-Power-Meter-1234",
+ "total_energy_kwh":33548.9609375,
+ "today_energy_kwh":12.373322486877441,
+ "power":533.33331298828125
+}
+```
+
 ### Home Assistant
 The integration of the sensor data in Home Assistant is pretty straight forward. Once, the [MQTT Integration](https://www.home-assistant.io/integrations/mqtt/) is done, the sensors for Power (watts) and Energy (kWh) will be integrated automically with the first published configuration messages. I made use of the [MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/) mechanism for that.
 If everything's fine, you'll find two new sensors in your entity list:
